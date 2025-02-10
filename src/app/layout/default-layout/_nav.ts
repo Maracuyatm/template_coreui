@@ -20,6 +20,11 @@ export const navItems: INavData[] = [
     iconComponent: { name: 'cil-drop' }
   },
   {
+    name: 'Categorias',
+    url: '/categorias',
+    iconComponent: { name: 'cil-drop' }
+  },
+  {
     name: 'Colors',
     url: '/theme/colors',
     iconComponent: { name: 'cil-drop' }

@@ -1,1 +1,100 @@
-<p>productos works!</p>
+<c-card class="mb-4">
+  <c-card-header class="d-flex justify-content-between align-items-center">
+    <span>Lista de productos</span>
+    <button [cModalToggle]="productosModal.id" cButton class="btn btn-primary">
+      Agregar producto
+    </button>
+  </c-card-header>
+    <c-card-body>
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Ubicación</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of productoLista; track $index) {
+            <tr>
+              <td>{{ item.nombre }}</td>
+              <td>{{ item.categoria.nombre }}</td>
+              <td>{{ item.ubicacion }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </c-card-body>
+  </c-card>
+
+  
+  
+  
+  
+  <c-modal #productosModal backdrop="static" alignment="center" id="productosModal">
+    <c-modal-header>
+      <h5 cModalTitle>Nuevo producto</h5>
+      <button #cerrarModal [cModalToggle]="productosModal.id" cButtonClose></button>
+    </c-modal-header>
+  
+    <c-modal-body>
+      <!-- Asignamos un ID único al formulario -->
+      <form [formGroup]="productoForm" (ngSubmit)="agregarProducto()" id="productoForm">
+        <div class="form-group mb-3">
+          <label for="nombre">Nombre</label>
+          <input type="text" class="form-control" id="nombre" formControlName="producto" required>
+          <div class="text-danger" *ngIf="productoForm.get('producto')?.hasError('required') && productoForm.get('producto')?.touched">
+            <span>El nombre del producto <strong>es obligatorio</strong></span>
+          </div>
+        </div>
+  
+        <div class="form-group mb-3">
+          <label for="precio">Precio</label>
+          <input type="number" class="form-control" id="precio" formControlName="precio" required>
+          <div class="text-danger" *ngIf="productoForm.get('precio')?.hasError('required') && productoForm.get('precio')?.touched">
+            <span>El precio del producto <strong>es obligatorio</strong></span>
+          </div>
+        </div>
+  
+        <div class="form-group mb-3">
+          <label for="categoria">Categoría</label>
+          <select class="form-control" id="categoria" formControlName="categoria" required>
+            <option value="" disabled>Seleccione una categoría</option>
+            <option *ngFor="let item of categoriaLista" [value]="item._id">{{ item.nombre }}</option>
+          </select>
+          <div class="text-danger" *ngIf="productoForm.get('categoria')?.hasError('required') && productoForm.get('categoria')?.touched">
+            <span>La categoría del producto <strong>es obligatoria</strong></span>
+          </div>
+        </div>
+  
+        <div class="form-group mb-3">
+          <label for="ubicacion">Ubicación</label>
+          <input type="text" class="form-control" id="ubicacion" formControlName="ubicacion" required>
+          <div class="text-danger" *ngIf="productoForm.get('ubicacion')?.hasError('required') && productoForm.get('ubicacion')?.touched">
+            <span>La ubicación del producto <strong>es obligatoria</strong></span>
+          </div>
+        </div>
+  
+        <!-- Puedes mantener este botón o eliminarlo si solo quieres el del footer -->
+        <!-- <div class="mb-3">
+          <button routerLink="/" class="btn btn-secondary btn-lg float-start">Volver</button>
+          <button [disabled]="productoForm.invalid" type="submit" class="btn btn-success btn-lg float-end">Aceptar</button>
+        </div> -->
+      </form>
+    </c-modal-body>
+  
+    <c-modal-footer>
+      <button [cModalToggle]="productosModal.id" cButton color="secondary">
+        Cancelar
+      </button>
+      <!-- Este botón ahora envía el formulario -->
+      <button cButton color="primary" [disabled]="productoForm.invalid" type="submit" form="productoForm">
+        Agregar
+      </button>
+    </c-modal-footer>
+  </c-modal>
+
+  <c-alert visible="false" color="secondary">A simple secondary alert—check it out!</c-alert>
+  
+
+  
