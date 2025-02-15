@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, QueryList, ViewChild, ViewChildren, viewChild } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -58,6 +58,7 @@ export class CategoriasComponent {
   @ViewChildren(ToasterComponent) viewChildren!: QueryList<ToasterComponent>;
   @ViewChild('cerrarModal') cerrarModal!: ElementRef;
   @ViewChild('categoriasModal') categoriasModal!: ElementRef;
+  @ViewChild('modalBtnAgregar', { static: false }) modalBtnAgregar!: ElementRef;
   @ViewChild('modalTitulo', { static: false }) modalTitulo!: ElementRef;
   @ViewChild('toaster') toaster!: ToasterComponent;
   @ViewChild(DataTableDirective, { static: false }) dtElement!: DataTableDirective;
@@ -131,6 +132,7 @@ export class CategoriasComponent {
         $(row).find('.delete-btn').on('click', () => {
          // self.eliminarCategoria((data as Categoria)._id);  // Convertimos a Categoria
          console.log("Eliminar 1");
+         this.deleteCategoria(data._id);
          
         });
       
@@ -167,6 +169,7 @@ export class CategoriasComponent {
   abrirModalEdicion(categoria: Categoria): void {
     this.visible = !this.visible;
     // Cambia el título del modal
+    this.modalBtnAgregar.nativeElement.textContent = 'Actualizar categoría';
     this.modalTitulo.nativeElement.textContent = 'Editar categoría';
 
     
@@ -181,6 +184,7 @@ export class CategoriasComponent {
   abrirModalNuevo(): void {
     // Restablece título y formulario
     this.modalTitulo.nativeElement.textContent = 'Nueva categoría';
+    this.modalBtnAgregar.nativeElement.textContent = 'Agregar categoría';
     this.id = null!;
     this.categoriaForm.reset();
   }
@@ -281,6 +285,7 @@ export class CategoriasComponent {
   deleteCategoria(id: string) {
     this.service.deleteCategoria(id).subscribe(() => {
      // this.reloadComponent(); // Actualiza la tabla sin recargar toda la página
+     this.recargarTabla();
     });
   }
   
