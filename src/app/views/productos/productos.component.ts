@@ -117,6 +117,7 @@ export class ProductosComponent implements OnInit {
         () => {
          // this.toastr.info('El producto fue actualizado correctamente', 'Producto actualizado');
           this.router.navigate(['/'], { replaceUrl: true });
+          this.cerrarModal.nativeElement.click(); // Cierra el modal
         },
         (error) => {
           console.error(error);

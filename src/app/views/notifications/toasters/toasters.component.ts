@@ -95,4 +95,27 @@ export class ToastersComponent implements OnInit {
       componentRef.instance['closeButton'] = props.closeButton;
     });
   }
+
+  addToast2() {
+    const toasterPosition = this.viewChildren.filter(
+      item => item.placement === 'top-end'
+    );
+  
+    toasterPosition.forEach((item) => {
+      const props = {
+        autohide: true,
+        delay: 5000,
+        position: 'top-end',
+        fade: true,
+        closeButton: true,
+        color: '',
+        title: 'Toast default top-end'
+      };
+  
+      const componentRef = item.addToast(AppToastComponent, props, {});
+      componentRef.instance['closeButton'] = props.closeButton;
+    });
+  }
+  
+ 
 }

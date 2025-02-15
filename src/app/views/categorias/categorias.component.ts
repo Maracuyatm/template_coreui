@@ -1,56 +1,75 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, AfterViewInit, ElementRef, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { CardComponent, CardHeaderComponent, CardBodyComponent, RowComponent } from '@coreui/angular';
-import { ModalToggleDirective, ModalComponent, ModalFooterComponent, ModalHeaderComponent, ModalBodyComponent, ModalDialogComponent, ModalContentComponent } from '@coreui/angular';
-import { ButtonCloseDirective, ButtonModule } from '@coreui/angular';
-import { FormModule } from '@coreui/angular';
-import { DataTablesModule } from 'angular-datatables';
-import { Config } from 'datatables.net';
-import { MasterService } from '../../_service/master.service';
-import { Categoria } from '../../_model/categorias';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common';
-import { AlertComponent } from '@coreui/angular';
+
+import { ButtonModule, FormModule } from '@coreui/angular';
+import { CardBodyComponent, CardComponent, CardHeaderComponent, ModalBodyComponent, ModalComponent, ModalContentComponent, ModalDialogComponent, ModalFooterComponent, ModalHeaderComponent, ModalToggleDirective, ButtonCloseDirective } from '@coreui/angular';
+import { AlertComponent, ToasterComponent, ToasterService, ToastModule } from '@coreui/angular';
+
 import { IconModule } from '@coreui/icons-angular';
 
+import { DataTableDirective, DataTablesModule } from 'angular-datatables';
+import { Config } from 'datatables.net';
 
-
-
+import { AppToastComponent } from '../notifications/toasters/toast-simple/toast.component';
+import { Categoria } from '../../_model/categorias';
+import { MasterService } from '../../_service/master.service';
 
 
 
 @Component({
   selector: 'app-categorias',
   imports: [
+    AlertComponent, 
+    AppToastComponent,
+    ButtonCloseDirective, 
+    ButtonModule,
+    CardBodyComponent, 
+    CardComponent, 
+    CardHeaderComponent,
     CommonModule,
-    CardComponent, CardHeaderComponent, CardBodyComponent,
     DataTablesModule,
-    ModalToggleDirective, ModalComponent, ModalFooterComponent, ModalHeaderComponent, ModalBodyComponent,
-    ButtonCloseDirective, ButtonModule,
-    FormModule, ReactiveFormsModule,
-    AlertComponent, IconModule
-  ],
+    FormModule, 
+    IconModule,
+    ModalBodyComponent, 
+    ModalComponent, 
+    ModalFooterComponent, 
+    ModalHeaderComponent, 
+    ModalToggleDirective,
+    ReactiveFormsModule,
+    ToastModule, 
+    ToasterComponent
+],
   templateUrl: './categorias.component.html',
   styleUrl: './categorias.component.scss'
 })
 export class CategoriasComponent {
 
+  isDataLoaded: boolean = false; 
   categoriaForm: FormGroup;
   categoriaLista: Categoria[]=[];
   dtOptions: Config = {};
   id: string;
   dtTrigger: Subject<any> = new Subject<any>();
+
+  @ViewChildren(ToasterComponent) viewChildren!: QueryList<ToasterComponent>;
   @ViewChild('cerrarModal') cerrarModal!: ElementRef;
+  @ViewChild('modalTitulo', { static: false }) modalTitulo!: ElementRef;
+  @ViewChild('toaster') toaster!: ToasterComponent;
+  @ViewChild(DataTableDirective, { static: false }) dtElement!: DataTableDirective;
+
+ 
+
 
   constructor(
     private service: MasterService,
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private toastr: ToastModule
   ){
     this.categoriaForm = this.fb.group({
       categoria: ['', Validators.required],
@@ -66,54 +85,95 @@ export class CategoriasComponent {
       pageLength: 5,
       processing: true
     };
+    
 
   }
 
+  // getCategorias(): void {
+  //   this.service.getCategorias().subscribe({
+  //     next: (data: Categoria[]) => {
+  //       console.log('Categorias recibidas:', data);
+  //       this.categoriaLista = data;
+  //       this.dtTrigger.next(null);  // Esto asegura que DataTables cargue correctamente los datos
+  //     },
+  //     error: (err) => {
+  //       console.error('Error al cargar categorías:', err);
+  //     }
+  //   });
+  // }
   getCategorias(): void {
     this.service.getCategorias().subscribe({
       next: (data: Categoria[]) => {
-        console.log('Categorias recibidas:', data);
         this.categoriaLista = data;
-        this.dtTrigger.next(null);  // Esto asegura que DataTables cargue correctamente los datos
+        this.isDataLoaded = true;  // Cambia a true cuando los datos se cargan
+        this.dtTrigger.next(null);
       },
-      error: (err) => {
-        console.error('Error al cargar categorías:', err);
-      }
+      error: (err) => console.error('Error al cargar categorías:', err)
     });
   }
   
 
-  //Agregar categorias
-  agregarcategoria(): void {
+  reloadComponent() {
+    this.router.navigateByUrl('/productos', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/categorias']);
+    });
+  }
+
+
+ 
+
+ 
+  abrirModalEdicion(categoria: Categoria): void {
+    // Cambia el título del modal
+    this.modalTitulo.nativeElement.textContent = 'Editar categoría';
+    
+    // Asigna el ID y carga los valores en el formulario
+    this.id = categoria._id!;
+    this.categoriaForm.patchValue({
+      categoria: categoria.nombre,
+      descripcion: categoria.descripcion,
+    });
+  }
+
+  abrirModalNuevo(): void {
+    // Restablece título y formulario
+    this.modalTitulo.nativeElement.textContent = 'Nueva categoría';
+    this.id = null!;
+    this.categoriaForm.reset();
+  }
+  
+
+  
+  saveCategoria(): void {
     const categoria: Categoria = {
       nombre: this.categoriaForm.get('categoria')?.value,
       descripcion: this.categoriaForm.get('descripcion')?.value,
     };
 
     if (this.id) {
-      // Editamos un categoria existente
-      // this.service.updatecategoria(this.id, categoria).subscribe(
-      //   () => {
-      //    // this.toastr.info('El categoria fue actualizado correctamente', 'categoria actualizado');
-      //     this.router.navigate(['/'], { replaceUrl: true });
-      //   },
-      //   (error) => {
-      //     console.error(error);
-      //     this.categoriaForm.reset();
-      //   }
-      // );
+      // Editamos una categoría existente
+      this.service.updateCategoria(this.id, categoria).subscribe(
+        () => {
+          this.router.navigate(['/'], { replaceUrl: true });
+          this.cerrarModal.nativeElement.click(); // Cierra el modal
+          
+          
+          //this.reloadComponent();
+          
+          
+        },
+        (error) => {
+          console.error(error);
+          this.categoriaForm.reset();
+        }
+      );
+      
     } else {
-      // Agregamos un nuevo categoria
+      // Agregamos una nueva categoría
       this.service.saveCategoria(categoria).subscribe(
         () => {
-          //this.toastr.success('El categoria fue registrado correctamente', 'categoria registrado');
-         // this.categoriaForm.reset();
-          // this.categoriasModal.toggle();
-          this.cerrarModal.nativeElement.click();
-          //this.getcategorias();
-          // this.router.navigate(['/categorias']);
-  //         this.location.go(this.location.path()); 
-  // window.location.reload(); // Refresca la página
+          this.cerrarModal.nativeElement.click(); // Cierra el modal
+          // this.reloadComponent();
         },
         (error) => {
           console.error(error);
@@ -121,7 +181,14 @@ export class CategoriasComponent {
         }
       );
     }
+
+    
+  }
+
+  deleteCategoria(id: string) {
+    this.service.deleteCategoria(id).subscribe(() => {
+     // this.reloadComponent(); // Actualiza la tabla sin recargar toda la página
+    });
   }
   
-
 }

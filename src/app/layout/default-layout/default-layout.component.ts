@@ -3,6 +3,8 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 
 import { IconDirective } from '@coreui/icons-angular';
+import { ToasterService } from '@coreui/angular';
+
 import {
   ContainerComponent,
   ShadowOnScrollDirective,
@@ -44,11 +46,13 @@ function isOverflown(element: HTMLElement) {
         ShadowOnScrollDirective,
         ContainerComponent,
         RouterOutlet,
-        DefaultFooterComponent
+        DefaultFooterComponent,
+        
     ]
 })
 export class DefaultLayoutComponent {
   public navItems = navItems;
+  constructor(private toasterService: ToasterService) {}
 
   onScrollbarUpdate($event: any) {
     // if ($event.verticalUsed) {
