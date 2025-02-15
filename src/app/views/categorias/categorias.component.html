@@ -10,7 +10,7 @@
           <!-- <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover"> -->
             <table id="categoriasTable" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
 
-          <thead>
+          <!-- <thead>
             <tr>
               <th>Nombre</th>
               <th>Descripción</th>
@@ -24,7 +24,7 @@
                 <td>{{ item.nombre }}</td>
                 <td>{{ item.descripcion }}</td>
                 <td>
-                  <!-- <button class="btn btn-warning"><svg cIcon name="cil-pencil" class="icon" aria-hidden="true"></svg></button> -->
+                 
                   <button [cModalToggle]="categoriasModal.id" cButton class="btn btn-warning" 
                           (click)="abrirModalEdicion(item)">
                     <svg cIcon name="cil-pencil" class="icon" aria-hidden="true"></svg>
@@ -38,16 +38,18 @@
                 </td>
               </tr>
             }
-          </tbody>
+          </tbody> -->
         </table>
       </c-card-body>
     </c-card>
-  
+    <button class="btn btn-primary" (click)="recargarTabla()">Recargar Tabla</button>
     
-    <button class="btn btn-danger" ><svg cIcon name="cil-trash"></svg></button>
+
     
     
-    <c-modal #categoriasModal backdrop="static" alignment="center" id="categoriasModal">
+    
+    
+    <c-modal #categoriasModal backdrop="static" alignment="center" id="categoriasModal" [visible]="visible" (visibleChange)="handleLiveDemoChange($event)">
       <c-modal-header>
         <h5 #modalTitulo cModalTitle>Nueva categoría</h5>
         <button #cerrarModal [cModalToggle]="categoriasModal.id" cButtonClose></button>
