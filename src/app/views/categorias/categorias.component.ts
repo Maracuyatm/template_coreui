@@ -17,8 +17,6 @@ import { AppToastComponent } from '../notifications/toasters/toast-simple/toast.
 import { Categoria } from '../../_model/categorias';
 import { MasterService } from '../../_service/master.service';
 
-
-
 @Component({
   selector: 'app-categorias',
   imports: [
@@ -48,12 +46,16 @@ import { MasterService } from '../../_service/master.service';
 export class CategoriasComponent {
 
   isDataLoaded: boolean = false; 
-  public visible = false;
+  public visibleModal = false;
   categoriaForm: FormGroup;
   categoriaLista: Categoria[]=[];
   dtOptions: Config = {};
   id: string;
   dtTrigger: Subject<any> = new Subject<any>();
+
+  position = 'top-end';
+  visibleToast = false;
+  percentage = 0;
 
   @ViewChildren(ToasterComponent) viewChildren!: QueryList<ToasterComponent>;
   @ViewChild('cerrarModal') cerrarModal!: ElementRef;
@@ -72,7 +74,8 @@ export class CategoriasComponent {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private toastr: ToastModule
+    private toastr: ToastModule,
+    
   ){
     this.categoriaForm = this.fb.group({
       categoria: ['', Validators.required],
@@ -81,14 +84,7 @@ export class CategoriasComponent {
     this.id = this.activatedRoute.snapshot.paramMap.get('id')!;
   }
 
-  // ngOnInit(): void {
-  //   this.getCategorias();
-  //   this.dtOptions = {
-  //     pagingType: 'full',
-  //     pageLength: 5,
-  //     processing: true
-  //   };
-  // }
+
   ngOnInit(): void {
     this.getCategorias();
     this.dtOptions = {
@@ -165,9 +161,11 @@ export class CategoriasComponent {
     // };
   }
 
+
+
  
   abrirModalEdicion(categoria: Categoria): void {
-    this.visible = !this.visible;
+    this.visibleModal = !this.visibleModal;
     // Cambia el título del modal
     this.modalBtnAgregar.nativeElement.textContent = 'Actualizar categoría';
     this.modalTitulo.nativeElement.textContent = 'Editar categoría';
@@ -189,26 +187,29 @@ export class CategoriasComponent {
     this.categoriaForm.reset();
   }
 
-  toggleLiveDemo() {
-    this.visible = !this.visible;
-    this.modalTitulo.nativeElement.textContent = 'Editar categoría';
-  }
   handleLiveDemoChange(event: any) {
-    this.visible = event;
+    this.visibleModal = event;
+  }
+
+  //Toast
+
+
+
+  toggleToast() {
+    this.visibleToast = !this.visibleToast;
+  }
+
+  onVisibleChange($event: boolean) {
+    this.visibleToast = $event;
+    this.percentage = !this.visibleToast ? 0 : this.percentage;
+  }
+
+  onTimerChange($event: number) {
+    this.percentage = $event * 25;
   }
 
 
-  
-  // getCategorias(): void {
-  //   this.service.getCategorias().subscribe({
-  //     next: (data: Categoria[]) => {
-  //       this.categoriaLista = data;
-  //       this.isDataLoaded = true;  // Cambia a true cuando los datos se cargan
-  //       this.dtTrigger.next(null);
-  //     },
-  //     error: (err) => console.error('Error al cargar categorías:', err)
-  //   });
-  // }
+
   getCategorias(): void {
     this.service.getCategorias().subscribe({
       next: (data: Categoria[]) => {
@@ -220,14 +221,7 @@ export class CategoriasComponent {
     });
   }
 
-  // recargarTabla(): void {
-  //   this.service.getCategorias().subscribe((data: Categoria[]) => {
-  //     const tabla = $('#miTabla').DataTable(); // Asegúrate de poner el ID correcto de tu tabla
-  //     tabla.clear();               // Limpia los datos actuales
-  //     tabla.rows.add(data);        // Agrega los nuevos datos
-  //     tabla.draw();                // Redibuja la tabla
-  //   });
-  // }
+
   recargarTabla(): void {
     const table = $('#categoriasTable').DataTable();
     this.service.getCategorias().subscribe({
@@ -288,5 +282,7 @@ export class CategoriasComponent {
      this.recargarTabla();
     });
   }
+
+  
   
 }

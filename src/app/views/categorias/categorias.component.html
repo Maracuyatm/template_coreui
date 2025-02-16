@@ -10,46 +10,20 @@
           <!-- <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover"> -->
             <table id="categoriasTable" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
 
-          <!-- <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Descripción</th>
-              <th>Acciones</th>
-
-            </tr>
-          </thead>
-          <tbody>
-            @for (item of categoriaLista; track $index) {
-              <tr>
-                <td>{{ item.nombre }}</td>
-                <td>{{ item.descripcion }}</td>
-                <td>
-                 
-                  <button [cModalToggle]="categoriasModal.id" cButton class="btn btn-warning" 
-                          (click)="abrirModalEdicion(item)">
-                    <svg cIcon name="cil-pencil" class="icon" aria-hidden="true"></svg>
-                  </button>
-
-                  
-                  &nbsp;
-                  <button class="btn btn-danger" (click)="deleteCategoria(item._id!)"><svg cIcon name="cil-trash"></svg></button>
-                  
-                  
-                </td>
-              </tr>
-            }
-          </tbody> -->
         </table>
       </c-card-body>
     </c-card>
     <button class="btn btn-primary" (click)="recargarTabla()">Recargar Tabla</button>
     
+    
+
+    
 
     
     
     
     
-    <c-modal #categoriasModal backdrop="static" alignment="center" id="categoriasModal" [visible]="visible" (visibleChange)="handleLiveDemoChange($event)">
+    <c-modal #categoriasModal backdrop="static" alignment="center" id="categoriasModal" [visible]="visibleModal" (visibleChange)="handleLiveDemoChange($event)">
       <c-modal-header>
         <h5 #modalTitulo cModalTitle>Nueva categoría</h5>
         <button #cerrarModal [cModalToggle]="categoriasModal.id" cButtonClose></button>
@@ -88,14 +62,23 @@
       </c-modal-footer>
     </c-modal>
   
-    <c-alert visible="false" color="secondary">A simple secondary alert—check it out!</c-alert>
-
-
-
-   
-
-    
-    
-    
   
+    <c-toaster [placement]="position" class="p-3" position="fixed">
+      <c-toast
+        (timer)="onTimerChange($event)"
+        (visibleChange)="onVisibleChange($event)"
+        [visible]="visibleToast">
+        <c-toast-header>
+          <!-- <toast-sample-icon></toast-sample-icon> -->
+          CoreUI for Angular
+        </c-toast-header>
+        <c-toast-body>
+          <p>This is static toast message in a toaster</p>
+          <!-- <c-progress thin>
+            <c-progress-bar [value]="percentage"></c-progress-bar>
+          </c-progress> -->
+        </c-toast-body>
+      </c-toast>
+    </c-toaster>
     
+    <button (click)="toggleToast()" cButton class="m-1">Send a toast</button>

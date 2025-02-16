@@ -18,7 +18,7 @@
           @for (item of productoLista; track $index) {
             <tr>
               <td>{{ item.nombre }}</td>
-              <td>{{ item.categoria.nombre }}</td>
+              <td>{{ item.categoria ? item.categoria.nombre : 'Sin categoría' }}</td>
               <td>{{ item.ubicacion }}</td>
             </tr>
           }
