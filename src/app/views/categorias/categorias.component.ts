@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 
 import { ButtonModule, FormModule } from '@coreui/angular';
 import { CardBodyComponent, CardComponent, CardHeaderComponent, ModalBodyComponent, ModalComponent, ModalContentComponent, ModalDialogComponent, ModalFooterComponent, ModalHeaderComponent, ModalToggleDirective, ButtonCloseDirective } from '@coreui/angular';
-import { AlertComponent, ToasterComponent, ToasterService, ToastModule } from '@coreui/angular';
+import { AlertComponent, ToasterComponent, ToasterService, ToastModule, ToasterPlacement  } from '@coreui/angular';
 
 import { IconModule } from '@coreui/icons-angular';
 
@@ -48,6 +48,7 @@ export class CategoriasComponent {
   isDataLoaded: boolean = false; 
   public visibleModal = false;
   categoriaForm: FormGroup;
+  placement = ToasterPlacement.TopCenter;
   categoriaLista: Categoria[]=[];
   dtOptions: Config = {};
   id: string;
@@ -62,8 +63,10 @@ export class CategoriasComponent {
   @ViewChild('categoriasModal') categoriasModal!: ElementRef;
   @ViewChild('modalBtnAgregar', { static: false }) modalBtnAgregar!: ElementRef;
   @ViewChild('modalTitulo', { static: false }) modalTitulo!: ElementRef;
-  @ViewChild('toaster') toaster!: ToasterComponent;
+ 
+ // @ViewChild('toaster') toaster!: ToasterComponent;
   @ViewChild(DataTableDirective, { static: false }) dtElement!: DataTableDirective;
+  @ViewChild(ToasterComponent) toaster!: ToasterComponent;
 
  
 

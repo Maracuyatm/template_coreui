@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 
 import { AlertComponent } from '@coreui/angular';
-import { ToastrService } from 'ngx-toastr'
+// import { ToastrService } from 'ngx-toastr'
 
 @Component({
   selector: 'app-productos',
@@ -52,8 +52,8 @@ export class ProductosComponent implements OnInit {
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private location: Location,
-    private toastr : ToastrService
+    private location: Location
+    // private toastr : ToastrService
   ) {
     this.productoForm = this.fb.group({
       producto: ['', Validators.required],
@@ -117,7 +117,7 @@ export class ProductosComponent implements OnInit {
       // Editamos un producto existente
       this.service.updateProducto(this.id, producto).subscribe(
         () => {
-          this.toastr.info('El producto fue actualizado correctamente', 'Producto actualizado');
+         // this.toastr.info('El producto fue actualizado correctamente', 'Producto actualizado');
          // this.router.navigate(['/'], { replaceUrl: true });
           this.cerrarModal.nativeElement.click(); // Cierra el modal
         },
