@@ -28,9 +28,14 @@ import { AlertComponent } from '@coreui/angular';
   styleUrl: './productos.component.scss',
   imports: [
     CommonModule,
-    CardComponent, CardHeaderComponent, CardBodyComponent, RowComponent,
+    CardComponent, CardHeaderComponent, CardBodyComponent, 
+    //RowComponent,
     DataTablesModule,
-    ModalToggleDirective, ModalComponent, ModalFooterComponent, ModalHeaderComponent, ModalBodyComponent, ModalDialogComponent, ModalContentComponent,
+    ModalToggleDirective,
+     ModalComponent, 
+     ModalFooterComponent, ModalHeaderComponent, ModalBodyComponent, 
+     ModalDialogComponent, 
+     ModalContentComponent,
     ButtonCloseDirective, ButtonModule,
     FormModule, ReactiveFormsModule,
     AlertComponent

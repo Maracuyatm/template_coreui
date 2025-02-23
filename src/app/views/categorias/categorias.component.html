@@ -13,7 +13,7 @@
         </table>
       </c-card-body>
     </c-card>
-    <button class="btn btn-primary" (click)="recargarTabla()">Recargar Tabla</button>
+    
     
     
 
@@ -22,16 +22,13 @@
     
     
     
-    
-    <c-modal #categoriasModal backdrop="static" alignment="center" id="categoriasModal" [visible]="visibleModal" (visibleChange)="handleLiveDemoChange($event)">
+    <!-- Modal agregar / editar -->
+    <c-modal #categoriasModal backdrop="static" alignment="center" id="categoriasModal" [visible]="visibleModal" (visibleChange)="handleModal($event)">
       <c-modal-header>
         <h5 #modalTitulo cModalTitle>Nueva categoría</h5>
         <button #cerrarModal [cModalToggle]="categoriasModal.id" cButtonClose></button>
       </c-modal-header>
-      
-    
       <c-modal-body>
-        <!-- Asignamos un ID único al formulario -->
         <form [formGroup]="categoriaForm" (ngSubmit)="saveCategoria()" id="categoriaForm">
           <div class="form-group mb-3">
             <label for="nombre">Nombre</label>
@@ -40,7 +37,6 @@
               <span>El nombre del categoria <strong>es obligatorio</strong></span>
             </div>
           </div>
-    
           <div class="form-group mb-3">
             <label for="descripcion">Descripción</label>
             <input type="text" class="form-control" id="descripcion" formControlName="descripcion" required>
@@ -50,35 +46,41 @@
           </div>
         </form>
       </c-modal-body>
-    
       <c-modal-footer>
         <button [cModalToggle]="categoriasModal.id" cButton color="secondary">
           Cancelar
         </button>
-        <!-- Este botón ahora envía el formulario -->
         <button #modalBtnAgregar cButton color="primary" [disabled]="categoriaForm.invalid" type="submit" form="categoriaForm">
           Agregar
         </button>
       </c-modal-footer>
     </c-modal>
-  
-  
-    <c-toaster [placement]="position" class="p-3" position="fixed">
-      <c-toast
-        (timer)="onTimerChange($event)"
-        (visibleChange)="onVisibleChange($event)"
-        [visible]="visibleToast">
-        <c-toast-header>
-          <!-- <toast-sample-icon></toast-sample-icon> -->
-          CoreUI for Angular
-        </c-toast-header>
-        <c-toast-body>
-          <p>This is static toast message in a toaster</p>
-          <!-- <c-progress thin>
-            <c-progress-bar [value]="percentage"></c-progress-bar>
-          </c-progress> -->
-        </c-toast-body>
-      </c-toast>
-    </c-toaster>
+<!-- Fin modal agregar / editar -->
+
+<!-- Modal eliminar -->
+    <c-modal #eliminarModal backdrop="static" alignment="center" id="eliminarModal" [visible]="visibleModalEliminar" (visibleChange)="handleModalEliminar($event)">
+      <c-modal-header>
+        <h5 cModalTitle>Eliminar item</h5>
+        <button #cerrarModal [cModalToggle]="eliminarModal.id" cButtonClose></button>
+      </c-modal-header>
+      <c-modal-body>
+       ¿Deseas eliminar este item?
+      </c-modal-body>
+      <c-modal-footer>
+        <button [cModalToggle]="eliminarModal.id" cButton color="secondary" >
+          Cancelar
+        </button>
+        <button #modalBtnEliminar cButton color="danger" (click)="deleteCategoria(id)"> 
+          Eliminar
+        </button>
+      </c-modal-footer>
+    </c-modal>
+    <!-- Fin modal eliminar -->
+
     
-    <button (click)="toggleToast()" cButton class="m-1">Send a toast</button>
+   
+  
+    <c-toaster class="p-3" position="fixed" [placement]="placement"></c-toaster>
+
+  
+

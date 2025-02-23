@@ -3,16 +3,12 @@ import { CommonModule, Location } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-
 import { ButtonModule, FormModule } from '@coreui/angular';
 import { CardBodyComponent, CardComponent, CardHeaderComponent, ModalBodyComponent, ModalComponent, ModalContentComponent, ModalDialogComponent, ModalFooterComponent, ModalHeaderComponent, ModalToggleDirective, ButtonCloseDirective } from '@coreui/angular';
-import { AlertComponent, ToasterComponent, ToasterService, ToastModule, ToasterPlacement  } from '@coreui/angular';
-
+import { ToasterComponent, ToastModule, ToasterPlacement  } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
-
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Config } from 'datatables.net';
-
 import { AppToastComponent } from '../notifications/toasters/toast-simple/toast.component';
 import { Categoria } from '../../_model/categorias';
 import { MasterService } from '../../_service/master.service';
@@ -20,8 +16,6 @@ import { MasterService } from '../../_service/master.service';
 @Component({
   selector: 'app-categorias',
   imports: [
-    AlertComponent, 
-    AppToastComponent,
     ButtonCloseDirective, 
     ButtonModule,
     CardBodyComponent, 
@@ -46,15 +40,19 @@ import { MasterService } from '../../_service/master.service';
 export class CategoriasComponent {
 
   isDataLoaded: boolean = false; 
-  public visibleModal = false;
+  visibleModal = false;
+  visibleModalEliminar = false;
+  
+
   categoriaForm: FormGroup;
-  placement = ToasterPlacement.TopCenter;
+  
+  placement = ToasterPlacement.TopEnd;
   categoriaLista: Categoria[]=[];
   dtOptions: Config = {};
   id: string;
   dtTrigger: Subject<any> = new Subject<any>();
 
-  position = 'top-end';
+  //position = 'top-end';
   visibleToast = false;
   percentage = 0;
 
@@ -62,6 +60,7 @@ export class CategoriasComponent {
   @ViewChild('cerrarModal') cerrarModal!: ElementRef;
   @ViewChild('categoriasModal') categoriasModal!: ElementRef;
   @ViewChild('modalBtnAgregar', { static: false }) modalBtnAgregar!: ElementRef;
+  @ViewChild('modalBtnEliminar', { static: false }) modalBtnEliminar!: ElementRef;
   @ViewChild('modalTitulo', { static: false }) modalTitulo!: ElementRef;
  
  // @ViewChild('toaster') toaster!: ToasterComponent;
@@ -122,51 +121,35 @@ export class CategoriasComponent {
         `);
       
         $(row).find('.edit-btn').on('click', () => {
-          console.log("Editar 1");
           this.abrirModalEdicion(data)
-          
         });
         
       
         $(row).find('.delete-btn').on('click', () => {
-         // self.eliminarCategoria((data as Categoria)._id);  // Convertimos a Categoria
-         console.log("Eliminar 1");
-         this.deleteCategoria(data._id);
-         
+        //this.deleteCategoria(data._id);
+        this.abrirModalEliminar(data._id);
         });
       
         return row;
       }
       
     };
+  }
 
-    
-    
-    // this.dtOptions = {
-    //   pagingType: 'full',
-    //   pageLength: 5,
-    //   processing: true,
-    //   ajax: (dataTablesParameters: any, callback) => {
-    //     this.service.getCategorias().subscribe((data: Categoria[]) => {
-    //       callback({
-    //         recordsTotal: data.length,
-    //         recordsFiltered: data.length,
-    //         data: data
-    //       });
-    //     });
-    //   },
-    //   columns: [
-    //     { title: 'Nombre', data: 'nombre' },
-    //     { title: 'Descripción', data: 'descripcion' },
-    //     { title: 'Fecha de Creación', data: 'fechaCreacion' },
-    //     { title: 'Acciones', data: null }  // Esto lo manejas con rowCallback
-    //   ]
-    // };
+  recargarTabla(): void {
+    const table = $('#categoriasTable').DataTable();
+    this.service.getCategorias().subscribe({
+      next: (data: Categoria[]) => {
+        table.clear();
+        table.rows.add(data);
+        table.draw();
+      },
+      error: (err) => console.error('Error al recargar datos:', err)
+    });
   }
 
 
-
- 
+ //Modales
   abrirModalEdicion(categoria: Categoria): void {
     this.visibleModal = !this.visibleModal;
     // Cambia el título del modal
@@ -190,14 +173,22 @@ export class CategoriasComponent {
     this.categoriaForm.reset();
   }
 
-  handleLiveDemoChange(event: any) {
+  abrirModalEliminar(id : string){
+    this.id = id;
+    this.visibleModalEliminar = !this.visibleModalEliminar;
+  }
+
+  handleModal(event: any) {
     this.visibleModal = event;
   }
 
-  //Toast
+  handleModalEliminar(event: any) {
+    this.visibleModalEliminar = event;
+  }
+//Fin modales
 
-
-
+//Toast
+  
   toggleToast() {
     this.visibleToast = !this.visibleToast;
   }
@@ -211,8 +202,14 @@ export class CategoriasComponent {
     this.percentage = $event * 25;
   }
 
+  // Fin toast
 
 
+
+  
+
+  
+  //Crud categoría
   getCategorias(): void {
     this.service.getCategorias().subscribe({
       next: (data: Categoria[]) => {
@@ -225,19 +222,6 @@ export class CategoriasComponent {
   }
 
 
-  recargarTabla(): void {
-    const table = $('#categoriasTable').DataTable();
-    this.service.getCategorias().subscribe({
-      next: (data: Categoria[]) => {
-        table.clear();
-        table.rows.add(data);
-        table.draw();
-      },
-      error: (err) => console.error('Error al recargar datos:', err)
-    });
-  }
-
-  
   saveCategoria(): void {
     const categoria: Categoria = {
       nombre: this.categoriaForm.get('categoria')?.value,
@@ -250,7 +234,9 @@ export class CategoriasComponent {
         () => {
           //this.router.navigate(['/'], { replaceUrl: true });
           this.cerrarModal.nativeElement.click(); // Cierra el modal
-          
+          this.addToast('Categoría actualizada', 'La categoría fue actualizada correctamente.', 'info');
+         // this.addToast('Error', 'No se pudo eliminar la categoría.', 'danger');
+
           
           this.recargarTabla();
           
@@ -267,6 +253,7 @@ export class CategoriasComponent {
       this.service.saveCategoria(categoria).subscribe(
         () => {
           this.cerrarModal.nativeElement.click(); // Cierra el modal
+          this.addToast('Categoría registrada', 'La categoría fue registrada correctamente.', 'success');
           this.recargarTabla();
         },
         (error) => {
@@ -279,13 +266,35 @@ export class CategoriasComponent {
     
   }
 
-  deleteCategoria(id: string) {
+  
+  deleteCategoria(id: string | null) {
+    
+    
+    if (!id) return; // Si el id es null, no hace nada
+  
     this.service.deleteCategoria(id).subscribe(() => {
-     // this.reloadComponent(); // Actualiza la tabla sin recargar toda la página
-     this.recargarTabla();
+      this.visibleModalEliminar = false; // Cierra el modal
+      this.addToast('Categoría eliminada', 'La categoría fue eliminada correctamente.', 'success');
+      this.recargarTabla(); // Recarga la tabla sin recargar la página
     });
   }
 
+  //Fin crud
+
+  ////Pruebas
+
+  addToast(title: string, message: string, color: string) {
+    const options = {
+      title: title,
+      message: message,
+      delay: 5000,
+      placement:this.placement,
+      color: color,
+      autohide: true,
+    };
+    const componentRef = this.toaster.addToast(AppToastComponent, { ...options });
+  }
+  //Fin pruebas
   
   
 }

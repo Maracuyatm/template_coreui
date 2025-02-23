@@ -1,6 +1,11 @@
-import { Component, forwardRef, Input } from '@angular/core';
 
-import { ProgressComponent, ToastBodyComponent, ToastCloseDirective, ToastComponent, ToastHeaderComponent } from '@coreui/angular';
+
+import { ProgressComponent, ToastBodyComponent, ToastCloseDirective, ToastComponent, ToastHeaderComponent, ToasterService } from '@coreui/angular';
+
+import { ChangeDetectorRef, Component, ElementRef, forwardRef, Input, Renderer2 } from '@angular/core';
+
+
+
 
 @Component({
   selector: 'app-toast-simple',
@@ -11,10 +16,22 @@ import { ProgressComponent, ToastBodyComponent, ToastCloseDirective, ToastCompon
 })
 export class AppToastComponent extends ToastComponent {
 
-  constructor() {
-    super();
-  }
+  // constructor() {
+  //   super();
+  // }
+
+  
 
   @Input() closeButton = true;
   @Input() title = '';
+   @Input() message: string = '';
+
+  constructor(
+    public override hostElement: ElementRef,
+    public override renderer: Renderer2,
+    public override toasterService: ToasterService,
+    public override changeDetectorRef: ChangeDetectorRef
+  ) {
+    super();
+  }
 }
