@@ -11,9 +11,9 @@ import { FormModule } from '@coreui/angular';
 import { DataTablesModule } from 'angular-datatables';
 import { Config } from 'datatables.net';
 
-import { MasterService } from '../../_service/master.service';
-import { Producto } from '../../_model/productos';
-import { Categoria } from '../../_model/categorias';
+import { MasterService } from '../../core/services/master.service';
+import { Producto } from '../../core/models/productos';
+import { Categoria } from '../../core/models/categorias';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';

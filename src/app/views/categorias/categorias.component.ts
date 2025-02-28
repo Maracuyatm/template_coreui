@@ -10,8 +10,8 @@ import { IconModule } from '@coreui/icons-angular';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Config } from 'datatables.net';
 import { AppToastComponent } from '../notifications/toasters/toast-simple/toast.component';
-import { Categoria } from '../../_model/categorias';
-import { MasterService } from '../../_service/master.service';
+import { Categoria } from '../../core/models/categorias';
+import { MasterService } from '../../core/services/master.service';
 
 @Component({
   selector: 'app-categorias',
