@@ -21,15 +21,15 @@ export class RolService {
     return this.http.post<Rol>(this.urlRol, Rol);
   }
 
-  // getCategoria(id: string): Observable<Categoria> {
-  //   return this.http.get<Categoria>(this.urlCategorias + id);
-  // }
+  getRol(id: string): Observable<Rol> {
+    return this.http.get<Rol>(this.urlRol + id);
+  }
 
-  // updateCategoria(id: string, categoria: Categoria): Observable<Categoria> {
-  //   return this.http.put<Categoria>(this.urlCategorias + id, categoria);
-  // }
+  updateRol(id: string, rol: Rol): Observable<Rol> {
+    return this.http.put<Rol>(this.urlRol + id, rol);
+  }
 
-  // deleteCategoria(id: string): Observable<Categoria> {
-  //   return this.http.delete<Categoria>(this.urlCategorias + id);
-  // }
+  deleteRol(id: string): Observable<Rol> {
+    return this.http.delete<Rol>(this.urlRol + id);
+  }
 }

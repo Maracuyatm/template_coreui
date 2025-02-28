@@ -32,7 +32,7 @@ export const routes: Routes = [
       },
       {
         path: 'roles',
-        loadChildren: () => import('./access/roles/routes').then((m) => m.routes)
+        loadChildren: () => import('./access/rol/routes').then((m) => m.routes)
       },
       // {
       //   path: 'theme',
