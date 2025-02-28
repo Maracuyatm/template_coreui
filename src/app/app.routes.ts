@@ -24,7 +24,15 @@ export const routes: Routes = [
       },
       {
         path: 'dashboard',
-        loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
+        loadChildren: () => import('./views/_dashboard/routes').then((m) => m.routes)
+      },
+      {
+        path: 'usuarios',
+        loadChildren: () => import('./access/usuarios/routes').then((m) => m.routes)
+      },
+      {
+        path: 'roles',
+        loadChildren: () => import('./access/roles/routes').then((m) => m.routes)
       },
       // {
       //   path: 'theme',

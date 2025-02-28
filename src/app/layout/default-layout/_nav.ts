@@ -12,7 +12,7 @@ export const navItems: INavData[] = [
   },
   {
     title: true,
-    name: 'Mantenimientos'
+    name: 'Mantenimiento'
   },
   {
     name: 'Productos',
@@ -23,6 +23,20 @@ export const navItems: INavData[] = [
     name: 'Categorias',
     url: '/categorias',
     iconComponent: { name: 'cil-drop' }
+  },
+  {
+    title: true,
+    name: 'Acceso'
+  },
+  {
+    name: 'Usuarios',
+    url: '/usuarios',
+    iconComponent: { name: 'cil-people' }
+  },
+  {
+    name: 'Roles',
+    url: '/roles',
+    iconComponent: { name: 'cil-lock-locked' }
   },
   // {
   //   name: 'Colors',

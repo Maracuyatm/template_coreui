@@ -8,8 +8,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class MasterService {
-  urlProductos = 'http://localhost:3000/api/productos/';
-  urlCategorias = 'http://localhost:3000/api/categorias/';
+  urlProductos = 'http://localhost:3000/api/producto/';
+  urlCategorias = 'http://localhost:3000/api/categoria/';
 
   constructor(private http: HttpClient) {}
 
@@ -37,7 +37,7 @@ export class MasterService {
   //Categorías
 
   getCategorias() {
-    return this.http.get<Categoria[]>('http://localhost:3000/api/categorias');
+    return this.http.get<Categoria[]>('http://localhost:3000/api/categoria');
   }
 
   saveCategoria(Categoria: Categoria): Observable<Categoria> {
