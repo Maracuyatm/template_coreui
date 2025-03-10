@@ -27,8 +27,8 @@ export const routes: Routes = [
         loadChildren: () => import('./views/_dashboard/routes').then((m) => m.routes)
       },
       {
-        path: 'usuarios',
-        loadChildren: () => import('./access/usuarios/routes').then((m) => m.routes)
+        path: 'usuario',
+        loadChildren: () => import('./access/usuario/routes').then((m) => m.routes)
       },
       {
         path: 'roles',

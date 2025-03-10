@@ -15,7 +15,7 @@
        <!-- Modal agregar / editar -->
        <c-modal #rolModal backdrop="static" alignment="center" id="rolModal" [visible]="visibleModal" (visibleChange)="handleModal($event)">
         <c-modal-header>
-          <h5 #modalTitulo cModalTitle>Nueva categoría</h5>
+          <h5 #modalTitulo cModalTitle>Nuevo rol</h5>
           <button #cerrarModal [cModalToggle]="rolModal.id" cButtonClose></button>
         </c-modal-header>
         <c-modal-body>

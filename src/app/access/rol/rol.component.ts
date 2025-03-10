@@ -40,6 +40,7 @@ import { IconModule } from '@coreui/icons-angular';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Config } from 'datatables.net';
 import { AppToastComponent } from '../../views/notifications/toasters/toast-simple/toast.component';
+
 import { Rol } from '../../core/models/rol';
 import { RolService } from '../../core/services/rol.service';
 

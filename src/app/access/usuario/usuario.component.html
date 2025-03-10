@@ -1,0 +1,108 @@
+<c-card class="mb-4">
+    <c-card-header class="d-flex justify-content-between align-items-center">
+      <span>Lista de usuarios</span>
+      <button [cModalToggle]="usuarioModal.id" cButton class="btn btn-primary" (click)="abrirModalNuevo()">
+        Agregar usuario
+      </button>
+    </c-card-header>
+      <c-card-body>
+            <table id="usuarioTable" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+
+        </table>
+      </c-card-body>
+    </c-card>
+
+       <!-- Modal agregar / editar -->
+       <c-modal #usuarioModal backdrop="static" alignment="center" id="usuarioModal" [visible]="visibleModal" (visibleChange)="handleModal($event)">
+        <c-modal-header>
+          <h5 #modalTitulo cModalTitle>Nuevo usuario</h5>
+          <button #cerrarModal [cModalToggle]="usuarioModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+          <form [formGroup]="usuarioForm" (ngSubmit)="saveUsuario()" id="usuarioForm">
+            <div class="row ">
+              <div class="form-group col-md-8">
+                <label for="nombre">Usuario</label>
+                <input type="text" class="form-control" id="usuario" formControlName="usuario" required>
+              <!-- <input type="text" class="form-control" id="nombre" formControlName="rol" required> -->
+              <div class="text-danger" *ngIf="usuarioForm.get('rol')?.hasError('required') && usuarioForm.get('rol')?.touched">
+                <span>El nombre del rol <strong>es obligatorio</strong></span>
+              </div>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="estado">Estado</label>
+                <select id="estado" class="form-control" formControlName="estado">
+                  <option [value]="true">Activo</option>
+                  <option [value]="false">Inactivo</option>
+                </select>
+                <div class="text-danger" *ngIf="usuarioForm.get('descripcion')?.hasError('required') && usuarioForm.get('descripcion')?.touched">
+                  <span>El estado del rol <strong>es obligatorio</strong></span>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="form-group mb-3">
+              
+            </div> -->
+            <div class="form-group mb-3">
+              <label for="descripcion">Clave</label>
+              <input type="text" class="form-control" id="clave" formControlName="clave" required>
+              <div class="text-danger" *ngIf="usuarioForm.get('clave')?.hasError('required') && usuarioForm.get('correo')?.touched">
+                <span>La clave del usuario <strong>es obligatoria</strong></span>
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <label for="descripcion">Correo</label>
+              <input type="text" class="form-control" id="correo" formControlName="correo" required>
+              <div class="text-danger" *ngIf="usuarioForm.get('correo')?.hasError('required') && usuarioForm.get('correo')?.touched">
+                <span>El correo del usuario <strong>es obligatoria</strong></span>
+              </div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="rol">Rol</label>
+                <select class="form-control" id="rol" formControlName="rol" required>
+                  <option value="" disabled>Seleccione un rol</option>
+                  <!-- <option *ngFor="let item of rolLista" [value]="item._id">{{ item.nombre }}</option> -->
+                  <option *ngFor="let item of rolLista" [ngValue]="item">{{ item.nombre }}</option>
+
+                </select>
+                <div class="text-danger" *ngIf="usuarioForm.get('rol')?.hasError('required') && usuarioForm.get('rol')?.touched">
+                  <span>El rol del usuario <strong>es obligatorio</strong></span>
+                </div>
+              </div>
+          </form>
+        </c-modal-body>
+        <c-modal-footer>
+          <button [cModalToggle]="usuarioModal.id" cButton color="secondary">
+            Cancelar
+          </button>
+          <button #modalBtnAgregar cButton color="success" [disabled]="usuarioForm.invalid" type="submit" form="usuarioForm">
+            Agregar
+          </button>
+        </c-modal-footer>
+      </c-modal>
+  <!-- Fin modal agregar / editar -->
+
+  <!-- Modal eliminar -->
+  <c-modal #eliminarModal backdrop="static" alignment="center" id="eliminarModal" [visible]="visibleModalEliminar" (visibleChange)="handleModalEliminar($event)">
+    <c-modal-header>
+      <h5 cModalTitle>Eliminar item</h5>
+      <button #cerrarModal [cModalToggle]="eliminarModal.id" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+     ¿Deseas eliminar este item?
+    </c-modal-body>
+    <c-modal-footer>
+      <button [cModalToggle]="eliminarModal.id" cButton color="secondary" >
+        Cancelar
+      </button>
+      <button #modalBtnEliminar cButton color="danger" (click)="deleteUsuario(id)"> 
+        Eliminar
+      </button>
+    </c-modal-footer>
+  </c-modal>
+  <!-- Fin modal eliminar -->
+
+  
+ 
+
+  <c-toaster class="p-3" position="fixed" [placement]="placement"></c-toaster>
